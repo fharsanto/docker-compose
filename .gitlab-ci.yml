@@ -1,0 +1,23 @@
+stages:
+  - build
+
+variables:
+  HUB: hub.spesolution.com
+  APP: tools/dcd
+  IMAGE_TAG: $HUB/$APP:$CI_COMMIT_REF_NAME 
+  IMAGE_RELEASE_TAG: $HUB/$APP:latest
+
+build:
+  stage: build
+  tags:
+    - runner-shell
+  before_script:
+    - echo $DOCKER_HUBP | docker login $HUB -u wahyu --password-stdin
+  script:
+    - docker build -t $IMAGE_TAG -t $IMAGE_RELEASE_TAG .
+    - docker push $IMAGE_TAG
+    - docker push $IMAGE_RELEASE_TAG
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "development"'
+      changes:
+        - "Dockerfile"
