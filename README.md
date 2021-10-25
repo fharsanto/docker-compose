@@ -7,7 +7,7 @@ docker_deploy:
   before_script:
     - eval $(ssh-agent -s);
     - echo "$DEPLOY_SSH_KEY" | tr -d '\r' | ssh-add -;
-  image: fharsanto/docker-compose:main
+  image: fharsanto/docker-compose:latest
   stage: deploy
   script:
     - ssh $DEPLOY_SSH_SERVER date
